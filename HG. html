@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галлеоны Хогвартса</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #0a0a20;
+            color: #f0e6d2;
+            text-align: center;
+            background-image: url('https://i.imgur.com/JJyFAx7.jpg');
+            background-size: cover;
+            margin: 0;
+            padding: 10px;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: rgba(10, 10, 32, 0.85);
+            border: 2px solid #946b2d;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 15px #5d2f0c;
+        }
+        
+        h1 {
+            color: #d4af37;
+            font-size: 1.8em;
+            text-shadow: 1px 1px 3px #000;
+            margin-bottom: 8px;
+        }
+        
+        .house-banner {
+            height: 60px;
+            margin: -5px 0 5px;
+        }
+        
+        .currency {
+            font-size: 1.2em;
+            margin: 10px 0;
+            padding: 8px;
+            background-color: rgba(20, 20, 50, 0.7);
+            border: 1px solid #5d2f0c;
+            border-radius: 5px;
+        }
+        
+        #wand {
+            width: 120px;
+            height: 120px;
+            margin: 15px auto;
+            cursor: pointer;
+            transition: transform 0.1s;
+            background-image: url('https://i.imgur.com/WzJqH8p.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #wand:active {
+            transform: scale(1.1);
+        }
+        
+        .click-effect {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-image: url('https://i.imgur.com/4Q6Fv9X.png');
+            background-size: contain;
+            pointer-events: none;
+            animation: float 1s ease-out;
+        }
+        
+        @keyframes float {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3) translateY(-40px); opacity: 0; }
+        }
+        
+        .upgrades {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .upgrade {
+            padding: 8px;
+            background-color: rgba(50, 30, 10, 0.7);
+            border: 1px solid #946b2d;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .upgrade:active {
+            background-color: rgba(70, 50, 30, 0.9);
+        }
+        
+        .upgrade:disabled {
+            background-color: rgba(30, 30, 30, 0.7);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .upgrade-name {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 0.9em;
+        }
+        
+        .upgrade-cost {
+            color: #a0a0a0;
+            font-size: 0.8em;
+        }
+        
+        .upgrade-level {
+            color: #7cfc00;
+            font-size: 0.7em;
+            margin-top: 3px;
+        }
+        
+        .stats {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        .house-select {
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        button {
+            background-color: #5d2f0c;
+            color: #f0e6d2;
+            border: none;
+            padding: 6px 12px;
+            margin: 3px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Times New Roman', serif;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+        
+        button:active {
+            background-color: #7a3a0f;
+        }
+        
+        .magic-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s;
+            background: radial-gradient(circle, rgba(210,180,140,0.8) 0%, rgba(0,0,0,0) 70%);
+        }
+        
+        .telegram-button {
+            background-color: #0088cc;
+            color: white;
+            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="magic-effect" id="magicEffect"></div>
+    
+    <div class="container">
+        <h1>Галлеоны Хогвартса</h1>
+        <img src="https://i.imgur.com/4zL3Yyn.png" class="house-banner" id="houseBanner">
+        
+        <div class="house-select">
+            <button onclick="changeHouse('gryffindor')">Гриффиндор</button>
+            <button onclick="changeHouse('slytherin')">Слизерин</button>
+            <button onclick="changeHouse('ravenclaw')">Когтевран</button>
+            <button onclick="changeHouse('hufflepuff')">Пуффендуй</button>
+        </div>
+        
+        <div class="currency">
+            Галлеоны: <span id="galleons">0</span> 
+            | Сикли: <span id="sickles">0</span>
+        </div>
+        
+        <div id="wand"></div>
+        <div>Кликай на палочку!</div>
+        
+        <div class="stats">
+            <div>За клик: <span id="galleonsPerClick">1</span> галлеон</div>
+            <div>В секунду: <span id="galleonsPerSecond">0</span> галлеонов</div>
+            <div>Кликов: <span id="totalClicks">0</span></div>
+        </div>
+        
+        <h2>Магические улучшения</h2>
+        <div class="upgrades">
+            <div class="upgrade" onclick="buyUpgrade('owl')">
+                <div class="upgrade-name">Почтовая сова</div>
+                <div class="upgrade-cost">Цена: 20 галлеонов</div>
+                <div class="upgrade-level">Ур: <span id="owlLevel">0</span></div>
+            </div>
+            
+            <div class="upgrade" onclick="buyUpgrade('elf')">
+                <div class="upgrade-name">Домашний эльф</div>
+                <div class="upgrade-cost">Цена: 100 галлеонов</div>
+                <div class="upgrade-level">Ур: <span id="elfLevel">0</span></div>
+            </div>
+            
+            <div class="upgrade" onclick="buyUpgrade('broom')">
+                <div class="upgrade-name">Метла Нимбус</div>
+                <div class="upgrade-cost">Цена: 500 галлеонов</div>
+                <div class="upgrade-level">Ур: <span id="broomLevel">0</span></div>
+            </div>
+            
+            <div class="upgrade" onclick="buyUpgrade('portrait')">
+                <div class="upgrade-name">Живой портрет</div>
+                <div class="upgrade-cost">Цена: 2000 галлеонов</div>
+                <div class="upgrade-level">Ур: <span id="portraitLevel">0</span></div>
+            </div>
+        </div>
+        
+        <div class="telegram-button" onclick="shareGame()">Поделиться игрой</div>
+    </div>
+
+    <script>
+        // Игровые переменные
+        let game = {
+            galleons: 0,
+            sickles: 0,
+            galleonsPerClick: 1,
+            galleonsPerSecond: 0,
+            totalClicks: 0,
+            house: 'gryffindor',
+            upgrades: {
+                owl: { level: 0, cost: 20, gps: 0.2 },
+                elf: { level: 0, cost: 100, gps: 1 },
+                broom: { level: 0, cost: 500, gps: 5 },
+                portrait: { level: 0, cost: 2000, gps: 20 }
+            },
+            houseBonuses: {
+                gryffindor: { clickMultiplier: 1.2 },
+                slytherin: { gpsMultiplier: 1.2 },
+                ravenclaw: { upgradeCostReduction: 0.9 },
+                hufflepuff: { clickBonus: 1 }
+            }
+        };
+
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        
+        // Загрузка игры
+        function loadGame() {
+            if (tg.initDataUnsafe.user) {
+                const userId = tg.initDataUnsafe.user.id;
+                const savedGame = localStorage.getItem(`hogwartsClicker_${userId}`);
+                if (savedGame) {
+                    game = JSON.parse(savedGame);
+                }
+            } else {
+                const savedGame = localStorage.getItem('hogwartsClicker');
+                if (savedGame) {
+                    game = JSON.parse(savedGame);
+                }
+            }
+            
+            updateUI();
+            setInterval(passiveIncome, 1000);
+            
+            // Если игра открыта в Telegram, показываем кнопку закрытия
+            if (tg.platform !== 'unknown') {
+                tg.expand();
+                tg.BackButton.show();
+                tg.BackButton.onClick(() => tg.close());
+            }
+        }
+
+        // Сохранение игры
+        function saveGame() {
+            if (tg.initDataUnsafe.user) {
+                const userId = tg.initDataUnsafe.user.id;
+                localStorage.setItem(`hogwartsClicker_${userId}`, JSON.stringify(game));
+            } else {
+                localStorage.setItem('hogwartsClicker', JSON.stringify(game));
+            }
+        }
+
+        // Клик по палочке
+        document.getElementById('wand').addEventListener('click', function(e) {
+            let bonus = game.house === 'hufflepuff' ? game.houseBonuses.hufflepuff.clickBonus : 0;
+            const multiplier = game.house === 'gryffindor' ? game.houseBonuses.gryffindor.clickMultiplier : 1;
+            game.galleons += (game.galleonsPerClick + bonus) * multiplier;
+            game.totalClicks++;
+            
+            createClickEffect(e);
+            updateUI();
+            saveGame();
+            
+            // Вибрация для мобильных устройств
+            if (navigator.vibrate) navigator.vibrate(50);
+        });
+
+        // Создание эффекта клика
+        function createClickEffect(e) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left - 12;
+            const y = e.clientY - rect.top - 12;
+            
+            effect.style.left = `${x + rect.left}px`;
+            effect.style.top = `${y + rect.top}px`;
+            
+            document.body.appendChild(effect);
+            
+            const magicEffect = document.getElementById('magicEffect');
+            magicEffect.style.opacity = 0.7;
+            setTimeout(() => { magicEffect.style.opacity = 0; }, 100);
+            
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        // Пассивный доход
+        function passiveIncome() {
+            const multiplier = game.house === 'slytherin' ? game.houseBonuses.slytherin.gpsMultiplier : 1;
+            game.galleons += game.galleonsPerSecond * multiplier;
+            
+            if (game.galleons >= 1000) {
+                game.galleons -= 1000;
+                game.sickles += 1;
+            }
+            
+            updateUI();
+            saveGame();
+        }
+
+        // Покупка улучшения
+        function buyUpgrade(type) {
+            const upgrade = game.upgrades[type];
+            let cost = upgrade.cost * Math.pow(1.15, upgrade.level);
+            
+            if (game.house === 'ravenclaw') {
+                cost *= game.houseBonuses.ravenclaw.upgradeCostReduction;
+            }
+            
+            if (game.galleons >= cost) {
+                game.galleons -= cost;
+                upgrade.level++;
+                
+                game.galleonsPerSecond = 0;
+                for (const key in game.upgrades) {
+                    game.galleonsPerSecond += game.upgrades[key].level * game.upgrades[key].gps;
+                }
+                
+                updateUI();
+                saveGame();
+                
+                // Вибрация при покупке
+                if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+            }
+        }
+
+        // Смена факультета
+        function changeHouse(house) {
+            game.house = house;
+            
+            const banners = {
+                gryffindor: 'https://i.imgur.com/4zL3Yyn.png',
+                slytherin: 'https://i.imgur.com/9Q7WZ0Q.png',
+                ravenclaw: 'https://i.imgur.com/3ZQjK9v.png',
+                hufflepuff: 'https://i.imgur.com/5jXJQJt.png'
+            };
+            
+            document.getElementById('houseBanner').src = banners[house];
+            updateUI();
+            saveGame();
+        }
+
+        // Поделиться игрой
+        function shareGame() {
+            if (tg.platform !== 'unknown') {
+                tg.shareGame({
+                    title: "Галлеоны Хогвартса",
+                    message: "Я играю в магический кликер! Присоединяйся!",
+                    url: "https://your-game-url.com"
+                });
+            } else {
+                alert("Поделитесь ссылкой на игру вручную!");
+            }
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('galleons').textContent = Math.floor(game.galleons);
+            document.getElementById('sickles').textContent = game.sickles;
+            
+            const clickBonus = game.house === 'hufflepuff' ? game.houseBonuses.hufflepuff.clickBonus : 0;
+            document.getElementById('galleonsPerClick').textContent = game.galleonsPerClick + clickBonus;
+            
+            const gpsMultiplier = game.house === 'slytherin' ? game.houseBonuses.slytherin.gpsMultiplier : 1;
+            document.getElementById('galleonsPerSecond').textContent = (game.galleonsPerSecond * gpsMultiplier).toFixed(1);
+            
+            document.getElementById('totalClicks').textContent = game.totalClicks;
+            
+            for (const key in game.upgrades) {
+                const upgrade = game.upgrades[key];
+                let cost = upgrade.cost * Math.pow(1.15, upgrade.level);
+                
+                if (game.house === 'ravenclaw') {
+                    cost *= game.houseBonuses.ravenclaw.upgradeCostReduction;
+                }
+                
+                document.getElementById(`${key}Level`).textContent = upgrade.level;
+                document.querySelector(`.upgrade[onclick="buyUpgrade('${key}')"] .upgrade-cost`).textContent = 
+                    `Цена: ${Math.ceil(cost)} галлеонов`;
+            }
+        }
+
+        // Запуск игры
+        window.onload = loadGame;
+    </script>
+</body>
+</html>
